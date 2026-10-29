@@ -1,0 +1,49 @@
+# Normalize line endings to LF in the repository for all text files.
+# This kills the constant CRLF/LF churn that Windows checkouts produce
+# (core.autocrlf alone is not enough — .gitattributes is authoritative).
+* text=auto eol=lf
+
+# Explicitly LF for source / config / docs
+*.ts      text eol=lf
+*.tsx     text eol=lf
+*.js      text eol=lf
+*.jsx     text eol=lf
+*.mjs     text eol=lf
+*.cjs     text eol=lf
+*.json    text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.md      text eol=lf
+*.css     text eol=lf
+*.scss    text eol=lf
+*.html    text eol=lf
+*.sql     text eol=lf
+*.env     text eol=lf
+*.sh      text eol=lf
+.gitignore   text eol=lf
+.gitattributes text eol=lf
+Dockerfile   text eol=lf
+
+# Windows scripts keep CRLF
+*.ps1     text eol=crlf
+*.cmd     text eol=crlf
+*.bat     text eol=crlf
+
+# Binary assets — never touch
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
+*.webp    binary
+*.svg     text eol=lf
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.eot     binary
+*.pdf     binary
+*.zip     binary
+*.gz      binary
+
+# Lockfiles: keep as-is, don't diff in PRs
+package-lock.json -diff linguist-generated

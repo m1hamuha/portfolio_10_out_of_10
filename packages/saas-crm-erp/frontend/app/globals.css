@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  /* Focus indicator color (WCAG 2.4.7). Without it, focus-visible:ring-ring
+     resolves to an undefined --color-ring and the keyboard focus ring is invisible. */
+  --ring: #2563eb;
+  /* Muted/secondary text color. Without it, text-muted-foreground resolves to an
+     undefined --color-muted-foreground and secondary text falls back to full-strength
+     --foreground, collapsing the intended visual hierarchy. 4.76:1 on white = WCAG AA. */
+  --muted-foreground: #64748b;
+  /* Primary action color (the default Button variant: bg-primary text-primary-foreground).
+     Without it, every primary CTA renders with no fill and no text color, so it reads as
+     plain text instead of a clickable button. White on #2563eb = 5.17:1 = WCAG AA. */
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  /* Accent (the ghost/outline Button hover state: hover:bg-accent hover:text-accent-foreground).
+     The sidebar's 4 nav buttons are all variant="ghost", whose only styling IS this hover pair,
+     so without these tokens hovering the main navigation produced NO visual feedback at all.
+     accent-foreground on accent = 16.3:1 = WCAG AA. */
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  /* Card surface (the Card component: bg-card text-card-foreground). Without it, every
+     Card renders with a transparent fill, so its shadow-sm elevation has no opaque
+     surface to sit on and the 8 dashboard cards wash into the gray page instead of
+     reading as discrete panels. White card with #171717 text = 17.9:1 = WCAG AA. */
+  --card: #ffffff;
+  --card-foreground: #171717;
+  /* Border color (the Card component uses a bare `border` class). In Tailwind v4 the
+     default border color is currentColor, so without this token every card drew a harsh
+     near-black 1px box (= card-foreground #171717) instead of a subtle panel edge. The
+     Card className now uses `border-border`, which resolves to this. gray-200. */
+  --border: #e5e7eb;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ring: var(--ring);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --ring: #60a5fa;
+    --muted-foreground: #94a3b8;
+    --primary: #2563eb;
+    --primary-foreground: #ffffff;
+    /* Dark accent uses slate-700 (distinct from the gray-800 sidebar) so the hover
+       remains visible in dark mode; #f8fafc on #334155 = 9.9:1 = WCAG AA. */
+    --accent: #334155;
+    --accent-foreground: #f8fafc;
+    /* Dark card uses gray-800 (matches the sidebar, lighter than the gray-900 page) so
+       the card surface stays distinct from the page background; #ededed on #1f2937 = 12.5:1. */
+    --card: #1f2937;
+    --card-foreground: #ededed;
+    /* Dark border uses gray-700 so the card edge stays visible against the gray-800
+       card and gray-900 page without harshness. */
+    --border: #374151;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}

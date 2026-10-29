@@ -1,0 +1,84 @@
+{
+  "title": "PRD: Fintech Dashboard",
+  "version": "1.0",
+  "sections": {
+    "contextProblemGoals": {
+      "context": "User problem: financial data analytics is fragmented (multiple sources), updates with delays, it's hard to spot anomalies/trends, and it's difficult to make fast decisions.",
+      "goals": "Provide a unified dashboard with near-real-time metrics, alerts, and interactive analytics (filters, drill-down), designed for large volumes of time series/transactions."
+    },
+    "successMetrics": [
+      {"metric": "p95 API response time", "target": "<300-500 ms on cache hits"},
+      {"metric": "p95 TTI (time-to-interactive)", "target": "<2.5-3.5 s on a typical laptop"},
+      {"metric": "Data accuracy/consistency", "target": "<0.1% deviation from source"}
+    ],
+    "personas": [
+      {"name": "Financial analyst", "description": "Analytics-focused role consuming dashboards and reports."},
+      {"name": "Risk manager/Compliance", "description": "Monitors risk indicators and compliance metrics."},
+      {"name": "Head of product/CEO", "description": "High-level KPI overview for decision making."}
+    ],
+    "scenarios": [
+      {"name": "Daily summary", "description": "Balances, turnover, fees, MAU/ARPU."},
+      {"name": "Anomalies", "description": "Spike in declines/chargebacks, conversion drop."},
+      {"name": "Deep slice", "description": "Filter by time/geo/provider/currency; drill down to individual transactions."},
+      {"name": "Export/sharing", "description": "CSV/PDF, link sharing with permissions."}
+    ],
+    "nonFunctionalExpectations": [
+      {"description": "Fast UI on large tables; predictable data refresh; explainability of metrics."}
+    ],
+    "functionalRequirements": {
+      "MVP": {
+        "mustHave": [
+          "Integration with 2-3 external APIs (e.g., FX rates, payments statistics, bank statements/provider)",
+          "ETL-lite layer: normalization, currency/timezone mapping, deduplication, storage of raw and normalized data",
+          "Dashboard: 6-10 key charts (Chart.js for standard charts, D3 for custom/complex), transaction table with server-side pagination/sorting/filtering"
+        ]
+      },
+      "v1": {
+        "enhancements": [
+          "Alerting: rules (thresholds, simplified anomaly detection), channels (email/Telegram/webhook)",
+          "Role-based access (RBAC) + action audit (who exported/viewed sensitive breakdowns)",
+          "Self-serve source configuration (UI for API keys, integration health checks, limits)"
+        ]
+      }
+    },
+    "technicalRequirementsQuality": {
+      "apiAndData": {
+        "resilience": "Rate limiting, retries with backoff, circuit breaker, idempotency on ingestion",
+        "observability": "Tracing requests to external APIs, error/latency metrics per provider, data freshness report"
+      },
+      "cachingAndLoad": {
+        "redisUsage": [
+          "caching responses/aggregates",
+          "caching reference data (currencies/merchants)",
+          "ingestion dedup keys",
+          "distributed rate limiting"
+        ],
+        "benefits": "Caching reduces repeat API requests and speeds up responses; helps avoid provider limits"
+      },
+      "visualizationAndLargeVolumes": {
+        "backend": ["time-bucketing aggregations","downsampling for charts","progressive disclosure"],
+        "frontend": ["table virtualization","Web Workers for heavy transformations","selector memoization","lazy-loading chunks and charts"]
+      },
+      "securityAndAuth": {
+        "auth": "OAuth 2.0 / OIDC, JWT access token + refresh token rotation; single-use refresh: rotate on refresh; old tokens invalidated",
+        "protections": ["CSP","XSS hardening","CSRF protection (if cookies)","secrets via vault/env","dependency scanning (SCA)"]
+      }
+    },
+    "devOpsTestingReadiness": {
+      "ciCdInfrastructure": [
+        "Docker (dev/prod)",
+        "CI (lint/test/build)",
+        "CD (preview deployments on Vercel + prod on AWS)",
+        "DB migrations",
+        "infrastructure as code (Terraform/CDK - optional)"
+      ],
+      "tests": [
+        "backend unit + contract tests for external APIs (mocks/fixtures)",
+        "frontend integration tests (Playwright/Cypress) for key scenarios",
+        "SLO/SLI (p95 latency, error budget)",
+        "load tests for heavy endpoints"
+      ]
+    },
+    "notes": "If stack is specified, provide tailored stories and acceptance criteria."
+  }
+}

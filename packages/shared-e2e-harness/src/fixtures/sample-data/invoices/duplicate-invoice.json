@@ -1,0 +1,30 @@
+{
+  "invoiceNumber": "INV-2026-001",
+  "supplierName": "Acme Industrial Supplies GmbH",
+  "supplierVatId": "DE123456789",
+  "supplierIban": "DE89370400440532013000",
+  "invoiceDate": "2026-10-15",
+  "dueDate": "2026-11-15",
+  "currency": "EUR",
+  "lineItems": [
+    {
+      "description": "Precision Bearing Assembly 100mm",
+      "quantity": 10,
+      "unitPriceCents": 12500,
+      "totalPriceCents": 125000,
+      "vatRatePercent": 19
+    },
+    {
+      "description": "Industrial Lubricant Synthetic 5L",
+      "quantity": 4,
+      "unitPriceCents": 4500,
+      "totalPriceCents": 18000,
+      "vatRatePercent": 19
+    }
+  ],
+  "subtotalCents": 143000,
+  "vatAmountCents": 27170,
+  "totalAmountCents": 170170,
+  "status": "DUPLICATE_FLAGGED",
+  "flagReason": "Matches previously posted invoice INV-2026-001 from supplier DE123456789 with identical amount €1,701.70"
+}

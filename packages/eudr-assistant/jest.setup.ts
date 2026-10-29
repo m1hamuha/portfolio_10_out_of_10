@@ -1,0 +1,173 @@
+import '@testing-library/jest-dom'
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+  }),
+  usePathname: () => '/',
+  useSearchParams: () => new URLSearchParams(),
+}))
+
+jest.mock('next/cache', () => ({
+  revalidatePath: jest.fn(),
+  revalidateTag: jest.fn(),
+}))
+
+jest.mock('jose', () => ({
+  SignJWT: jest.fn().mockImplementation(() => ({
+    setProtectedHeader: jest.fn().mockReturnThis(),
+    setIssuedAt: jest.fn().mockReturnThis(),
+    setExpirationTime: jest.fn().mockReturnThis(),
+    sign: jest.fn().mockResolvedValue('mocked-jwt-token'),
+  })),
+  jwtVerify: jest.fn().mockResolvedValue({
+    payload: {
+      sub: 'test-user',
+      email: 'test@example.com',
+      plan: 'TRIAL',
+      type: 'access',
+      iat: Date.now() / 1000,
+      exp: Date.now() / 1000 + 900,
+    },
+  }),
+}))
+
+process.env.AUTH_SECRET = 'test-secret-key-at-least-32-characters-long-for-testing'
+process.env.REFRESH_SECRET = 'test-refresh-secret-key-at-least-32-characters-long'
+
+jest.mock('bcryptjs', () => ({
+  hash: jest.fn().mockResolvedValue('hashed-password'),
+  compare: jest.fn().mockResolvedValue(true),
+}))
+
+jest.mock('uuid', () => ({
+  v4: () => '00000000-0000-4000-8000-000000000000',
+}))
+
+jest.mock('@turf/turf', () => {
+  const actual = jest.requireActual('@turf/turf')
+  return {
+    ...actual,
+    polygon: actual.polygon || jest.fn().mockReturnValue({ geometry: { type: 'Polygon', coordinates: [] } }),
+    centroid: actual.centroid || jest.fn().mockReturnValue({ geometry: { type: 'Point', coordinates: [0, 0] } }),
+    simplify: actual.simplify || jest.fn((poly) => poly),
+  }
+})
+
+jest.mock('@/lib/prisma', () => ({
+  prisma: {
+    client: {
+      findUnique: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+      count: jest.fn(),
+    },
+    supplier: {
+      findMany: jest.fn(),
+      findFirst: jest.fn(),
+      findUnique: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+      count: jest.fn(),
+    },
+    productionPlace: {
+      findMany: jest.fn(),
+      findFirst: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+      count: jest.fn(),
+    },
+    geoJSONExport: {
+      findMany: jest.fn(),
+      create: jest.fn(),
+      count: jest.fn(),
+    },
+    auditLog: {
+      create: jest.fn(),
+      findMany: jest.fn(),
+      count: jest.fn(),
+      deleteMany: jest.fn(),
+    },
+    refreshToken: {
+      create: jest.fn(),
+      findUnique: jest.fn(),
+      findFirst: jest.fn(),
+      delete: jest.fn(),
+      deleteMany: jest.fn(),
+      count: jest.fn(),
+    },
+    loginAttempt: {
+      create: jest.fn(),
+      findFirst: jest.fn(),
+      deleteMany: jest.fn(),
+      count: jest.fn(),
+    },
+    complianceSnapshot: {
+      create: jest.fn(),
+      findFirst: jest.fn(),
+      findMany: jest.fn(),
+    },
+    dDSRecord: {
+      create: jest.fn(),
+      findFirst: jest.fn(),
+      findMany: jest.fn(),
+    },
+  },
+}))
+
+if (typeof TextEncoder === "undefined") {
+  (global as any).TextEncoder = class TextEncoder {
+    encode(str: string): Uint8Array {
+      const bytes = []
+      for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i)
+        bytes.push(charCode >> 8, charCode & 0xFF)
+      }
+      return new Uint8Array(bytes)
+    }
+  }
+}
+
+// jsdom's crypto implementation may lack randomUUID; polyfill it for tests.
+if (typeof globalThis.crypto === 'undefined') {
+  (globalThis as any).crypto = {}
+}
+if (typeof globalThis.crypto.randomUUID !== 'function') {
+  (globalThis.crypto as { randomUUID: () => string }).randomUUID = () =>
+    '00000000-0000-4000-8000-' + Math.random().toString(16).slice(2, 14).padEnd(12, '0')
+}
+if (typeof globalThis.crypto.getRandomValues !== 'function') {
+  (globalThis.crypto as { getRandomValues: <T extends ArrayBufferView | null>(a: T) => T }).getRandomValues = (arr) => {
+    const view = arr as unknown as Uint8Array
+    for (let i = 0; i < view.length; i++) view[i] = Math.floor(Math.random() * 256)
+    return arr
+  }
+}
+
+if (typeof global.setImmediate === 'undefined') {
+  (global as any).setImmediate = (fn: (...args: any[]) => void, ...args: any[]) => setTimeout(fn, 0, ...args)
+}
+if (typeof global.clearImmediate === 'undefined') {
+  (global as any).clearImmediate = (id: any) => clearTimeout(id)
+}
+if (typeof URL.createObjectURL === 'undefined') {
+  URL.createObjectURL = jest.fn(() => 'blob:mock-url')
+}
+if (typeof URL.revokeObjectURL === 'undefined') {
+  URL.revokeObjectURL = jest.fn()
+}
+
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}))
+
+console.error = jest.fn()
+console.warn = jest.fn()

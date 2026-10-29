@@ -1,0 +1,32 @@
+{
+  "name": "portfolio-10-out-of-10",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio 10/10 Overhaul - Unified enterprise monorepo housing 3 flagship live demos and 4 elevated open-source systems",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint:all": "npm run lint --workspaces --if-present",
+    "typecheck:all": "npm run typecheck --workspaces --if-present",
+    "build:all": "npm run build --workspaces --if-present",
+    "test:unit": "npm run test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e --workspace=packages/shared-e2e-harness --if-present",
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "test:coverage": "npm run test:coverage --workspaces --if-present",
+    "verify:full": "npm run lint:all && npm run typecheck:all && npm run build:all && npm run test:all",
+    "lint": "npm run lint:all",
+    "typecheck": "npm run typecheck:all",
+    "build": "npm run build:all",
+    "test": "npm run test:all"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "npm@11.13.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

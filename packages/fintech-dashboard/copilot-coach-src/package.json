@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "workspaces": ["ai-coach-mvp"] ,
+  "scripts": {
+    "lint": "pnpm -w lint",
+    "typecheck": "pnpm -w typecheck",
+    "test:unit": "pnpm -w test:unit",
+    "test:e2e": "pnpm -w test:e2e",
+    "dev": "pnpm --filter ai-coach-mvp dev",
+    "build": "pnpm --filter ai-coach-mvp build",
+    "start": "pnpm --filter ai-coach-mvp start"
+  }
+}

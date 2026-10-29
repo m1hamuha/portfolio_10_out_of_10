@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Design tokens: semantic, high-contrast.
+   Chrome uses ONE accent (trust-blue) + neutrals.
+   Severity colors (red/amber/green) appear only inside the
+   report, where they encode real meaning (risk level).
+   ============================================================ */
+:root {
+  --paper: #f4f6f9;
+  --surface: #ffffff;
+  --ink: #0b1220; /* near-black primary text, very high contrast */
+  --ink-2: #41506a; /* secondary, still AA, used sparingly, never tiny */
+  --line: #e2e7ef;
+
+  --accent: #1b4de4; /* confident trust-blue */
+  --accent-ink: #1539a8; /* hover/active */
+  --accent-soft: #eaf0ff;
+
+  --risk-high: #d4243a;
+  --risk-med: #c2700a;
+  --risk-low: #2563eb;
+  --ok: #157a4a;
+
+  color-scheme: light;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Golos Text", system-ui, sans-serif;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Focus visibility: accessibility floor */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---- Motion: subtle, mobile-visible, reduced-motion safe ---- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-rise {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ============================================================
+   Print: turn the report into a clean consultant deliverable
+   ============================================================ */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  body {
+    background: #fff;
+    font-size: 12pt;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-block {
+    box-shadow: none !important;
+    border-color: #d4d9e2 !important;
+    break-inside: avoid;
+  }
+  .report-root {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+}

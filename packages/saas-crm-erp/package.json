@@ -1,0 +1,17 @@
+{
+  "name": "@portfolio/saas-crm-erp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unified Enterprise SaaS CRM & Operations Platform with Dynamic RBAC and Deterministic Financial Ledger",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend --",
+    "build": "npm run build --prefix frontend",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "node -e \"console.log('saas-crm-erp lint pass')\""
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  }
+}

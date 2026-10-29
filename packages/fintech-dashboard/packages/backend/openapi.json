@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fintech API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "http://localhost:3001" }
+  ],
+  "paths": {
+    "/accounts": {
+      "get": {
+        "summary": "Get accounts",
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/accounts/{id}": {
+      "get": {
+        "summary": "Get account by id",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "summary": "List transactions with filters",
+        "parameters": [
+          { "name": "accountId", "in": "query", "required": false, "schema": { "type": "string" } },
+          { "name": "startDate", "in": "query", "required": false, "schema": { "type": "string", "format": "date" } },
+          { "name": "endDate", "in": "query", "required": false, "schema": { "type": "string", "format": "date" } },
+          { "name": "category", "in": "query", "required": false, "schema": { "type": "string" } },
+          { "name": "minAmount", "in": "query", "required": false, "schema": { "type": "number" } },
+          { "name": "maxAmount", "in": "query", "required": false, "schema": { "type": "number" } }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/health": {"get": {"summary": "Health check", "responses": {"200": {"description": "OK"}}}}
+  },
+  "components": {
+    "schemas": {
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "balance": { "type": "number" },
+          "currency": { "type": "string" },
+          "type": { "type": "string" }
+        },
+        "required": ["id", "name", "balance", "currency", "type"]
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "description": { "type": "string" },
+          "amount": { "type": "number" },
+          "currency": { "type": "string" },
+          "category": { "type": "string" },
+          "accountId": { "type": "string" }
+        },
+        "required": ["id", "date", "description", "amount", "currency", "category", "accountId"]
+      }
+    }
+  }
+}
